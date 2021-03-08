@@ -179,7 +179,7 @@ class _BodyState extends State<Body> {
           padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
           child: googleLoginButton()),
       Container(
-        height: 250,
+        height: 220,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.end,
