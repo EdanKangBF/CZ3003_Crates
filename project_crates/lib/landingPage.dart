@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'appTheme.dart';
 
 class LandingPage extends StatefulWidget {
   final String name;
@@ -14,9 +15,11 @@ class _LandingPageState extends State<LandingPage> {
         appBar: AppBar(
             centerTitle: true,
             automaticallyImplyLeading: false,
-            backgroundColor: Colors.orange,
+            backgroundColor: AppTheme.background,
+            toolbarHeight: 200,
             title: Text(
-              "Landing Page",
+              "CRATES",
+              style: AppTheme.display1,
             ),
             shape: RoundedRectangleBorder(
                 borderRadius:
@@ -34,6 +37,21 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+        child: TextField(
+            textInputAction: TextInputAction.search,
+            textAlign: TextAlign.start,
+            decoration: InputDecoration(
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+              prefixIcon: IconButton(
+                icon: Icon(Icons.search),
+                iconSize: 30,
+                onPressed: null,
+              ),
+              hintText: 'Search',
+              contentPadding: EdgeInsets.only(left: 15, top: 15),
+            )));
+    ;
   }
 }

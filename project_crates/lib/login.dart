@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/registerPage.dart';
 import 'landingPage.dart';
 import 'auth.dart';
+import 'appTheme.dart';
 
 class LoginPage extends StatelessWidget {
   @override
