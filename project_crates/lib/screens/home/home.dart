@@ -3,52 +3,60 @@ import 'package:flutter/material.dart';
 import '../common/NavigationBar.dart';
 import '../common/widgets.dart';
 import '../common/theme.dart';
+import 'package:flutter_application_1/backend/auth.dart';
 
 class Home extends StatefulWidget {
   static String tag = 'users-page';
+
+
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+  final AuthService _auth = AuthService();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        // bottomNavigationBar: NavigationBar(0),
-        backgroundColor: offWhite,
-        body: SingleChildScrollView(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                topCard(),
-                SizedBox(height: 50),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(25,0,0,10),
-                  child: Text('Categories',
-                      style: TextStyle(
-                        color: Colors.grey[800],
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      )
+    return SingleChildScrollView(
+          child: Container(
+            color: offWhite,
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  FloatingActionButton(onPressed: () async {
+                    await _auth.signOut();
+                  }),
+                  topCard(),
+                  SizedBox(height: 50),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(25,0,0,10),
+                    child: Text('Categories',
+                        style: TextStyle(
+                          color: Colors.grey[800],
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        )
+                    ),
                   ),
-                ),
-                CategoryList(),
-                SizedBox(height:15),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(25,0,0,10),
-                  child: Text('Nearby',
-                      style: TextStyle(
-                        color: Colors.grey[800],
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      )
+                  CategoryList(),
+                  SizedBox(height:15),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(25,0,0,10),
+                    child: Text('Nearby',
+                        style: TextStyle(
+                          color: Colors.grey[800],
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        )
+                    ),
                   ),
-                ),
-                NearbyList(),
-                SizedBox(height:30),
-              ]),
-        ));
+                  NearbyList(),
+                  SizedBox(height:30),
+                ]),
+          ),
+        );
   }
 }
 

@@ -12,6 +12,9 @@ import '../common/theme.dart';
 
 // First screen
 class Register extends StatefulWidget {
+  final Function toggleView;
+  Register({ this.toggleView });
+
   @override
   _RegisterState createState() => _RegisterState();
 }
@@ -89,11 +92,7 @@ class _RegisterState extends State<Register> {
                         ),
                         CustomButton(
                             btnText: 'Sign In',
-                            btnPressed: (){
-                              //Navigate to Sign In Page
-                              Navigator.push(
-                                  context, MaterialPageRoute(builder: (context) => SignIn()));
-                            }
+                            btnPressed: () => widget.toggleView()
                         ),
                         SizedBox(height: 120),
                         Text('CRATES',
@@ -304,8 +303,8 @@ class _RegisterFinalState extends State<RegisterFinal> {
                         CustomButton(
                             btnText: 'Register',
                             btnPressed: () async{
-                              FirebaseUser user = await createUserWithEmailAndPassword(emailController.text, passwordController.text);
-                              createUserDetails(user, usernameController.text, emailController.text);
+                              FirebaseUser user = await AuthService().createUserWithEmailAndPassword(emailController.text, passwordController.text);
+                              AuthService().createUserDetails(user, usernameController.text, emailController.text);
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(

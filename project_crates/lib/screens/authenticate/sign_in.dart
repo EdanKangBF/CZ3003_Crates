@@ -12,6 +12,10 @@ import '../home/home.dart';
 
 class SignIn extends StatefulWidget {
   static String tag = 'signin-page';
+
+  final Function toggleView;
+  SignIn({ this.toggleView });
+
   @override
   _SignInState createState() => _SignInState();
 }
@@ -35,23 +39,23 @@ class _SignInState extends State<SignIn> {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => Register()));
   }
-  void loginUserClick(){
-    FirebaseUser user;
-    signInWithEmailAndPassword(emailController.text, passwordController.text).then((user){
-      if(user != null){
-        retrieveUserType(user.uid);
-
-        // if(userDetails !=null){
-        //   print(userDetails.isAdmin);
-        //   Navigator.of(context).pushNamed(UserNavigationBar.tag);
-        // }else{
-        //   //Navigator.of(context).pushNamed(AdminNavigationBar.tag);
-        // }
-      }else{
-        //TODO: Show appropriate error messages (eg wrong password) on front-end
-      }
-    });
-  }
+  // void loginUserClick(){
+  //   FirebaseUser user;
+  //   AuthService().signInWithEmailAndPassword(emailController.text, passwordController.text).then((user){
+  //     if(user != null){
+  //       retrieveUserType(user.uid);
+  //
+  //       // if(userDetails !=null){
+  //       //   print(userDetails.isAdmin);
+  //       //   Navigator.of(context).pushNamed(UserNavigationBar.tag);
+  //       // }else{
+  //       //   //Navigator.of(context).pushNamed(AdminNavigationBar.tag);
+  //       // }
+  //     }else{
+  //       //TODO: Show appropriate error messages (eg wrong password) on front-end
+  //     }
+  //   });
+  // }
 
   // void loginUserClick() {
   //   FirebaseUser user;
@@ -114,12 +118,10 @@ class _SignInState extends State<SignIn> {
                         SizedBox(height: 20),
                         CustomButton(
                             btnText: 'Log In',
-                            btnPressed: (){
-                              loginUserClick();
-                              print(userDetails);
-                              if(userDetails!= null){
-                                Navigator.of(context).pushNamed(UserNavigationBar.tag);
-                              }
+                            btnPressed: () async{
+                              dynamic result = await AuthService().signInWithEmailAndPassword(emailController.text, passwordController.text);
+                              if (result == null)
+                                print('failed login!!!!');
                             }
                         ),
                         Padding(
@@ -144,9 +146,7 @@ class _SignInState extends State<SignIn> {
                         ),
                         CustomButton(
                             btnText: 'Register',
-                            btnPressed: (){
-                              registerUserClick();
-                            }
+                            btnPressed: () => widget.toggleView()
                         ),
                         SizedBox(height: 100),
                         Text('CRATES',
@@ -165,6 +165,7 @@ class _SignInState extends State<SignIn> {
                       ]),
                 ))));
   }
+
   retrieveUserType(String uid) async{
     userDetails =  await _profilePresenter.retrieveUserProfile(uid);
     setState(() {
