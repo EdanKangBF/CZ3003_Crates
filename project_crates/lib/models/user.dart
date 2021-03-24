@@ -5,23 +5,23 @@ class User {
   final String username;
   final String email;
   final bool isAdmin;
-  final File image;
+  final String imagePath;
 
-  User({this.userID, this.username, this.email, this.isAdmin, this.image});
+  User({this.userID, this.username, this.email, this.isAdmin, this.imagePath});
 //User({this.username,this.email,this.isAdmin,this.image});
   User.fromData(Map<String, dynamic> data)
       : userID = data['userID'],
         username = data['username '],
         email = data['email'],
         isAdmin = data['isAdmin'],
-        image = data['image'];
+        imagePath = data['imagePath'];
   Map<String, dynamic> toJson() {
     return {
       'userID': userID,
       'username': username,
       'email': email,
       'isAdmin': isAdmin,
-      'image' : image
+      'image' : imagePath
     };
   }
 }

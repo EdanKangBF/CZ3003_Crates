@@ -217,4 +217,83 @@ class MenuDrawer extends StatelessWidget {
   }
 }
 
+class ProfileTopCard extends StatelessWidget {
 
+  final String ownerImg, username, n_reviews;
+
+  // constructor
+  ProfileTopCard({this.ownerImg, this.username, this.n_reviews});
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: <Widget>[
+        Container(
+          width: double.infinity,
+          height: 180,
+          child: Card(
+              margin: EdgeInsets.zero,
+              color: primaryColor,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.zero,
+                    topRight: Radius.zero,
+                    bottomLeft: Radius.circular(15),
+                    bottomRight: Radius.circular(15),
+                  )
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(145, 110,0,0),
+                    child: Text(
+                      username,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: offWhite,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 35,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left:145),
+                    child: Text(n_reviews.toString() + " reviews",
+                      style: TextStyle(
+                        color: offWhite,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ],
+              )
+          ),
+        ),
+        Positioned(
+          right: 20,
+          left: 290,
+          bottom:-20,
+          child: Container(
+            height: 40,
+            child: CustomCurvedButton(
+              btnText: 'Edit',
+              btnPressed: (){},
+            )
+          ),
+        ),
+        Positioned(
+          left: 20,
+          bottom: -40,
+          child: CircleAvatar(
+            backgroundImage: NetworkImage(ownerImg),
+            radius: 60,
+          ),
+        ),
+      ]
+  );
+  }
+}

@@ -49,7 +49,7 @@ class _NearbyState extends State<Nearby> {
     mapHandler.createMarker(context, customIcon1);
     //print(dataHandler.haversine( 1.4267489378462697, 103.72670044012453, 1.4336990577109694, 103.70837558813479));
     return Scaffold(
-      bottomNavigationBar: NavigationBar(2),
+      // bottomNavigationBar: NavigationBar(2),
       backgroundColor: offWhite,
       body: Stack(
         children: <Widget>[

@@ -1,33 +1,49 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/backend/profile_presenter.dart';
+import 'package:flutter_application_1/models/Listing.dart';
+import 'package:flutter_application_1/models/Review.dart';
+import 'package:flutter_application_1/models/user.dart';
 import '../common/NavigationBar.dart';
 import '../common/theme.dart';
 import '../common/widgets.dart';
 
 class Profile extends StatefulWidget {
+  static String tag = 'users-page';
+
+
   @override
   _ProfileState createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   TabController _tabController;
+  ProfilePresenter _profilePresenter = new ProfilePresenter();
+  String userID;
+  User currentUser;
+  List<Listing> userListing;
+  String reviewCount;
+  List<Review> userReview;
+  bool viewOtherProfile = false;
 
   @override
-  void initState() {
+  initState()  {
     _tabController = new TabController(length: 2, vsync: this);
+    loadData();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        bottomNavigationBar: NavigationBar(2),
+        // bottomNavigationBar: NavigationBar(2),
         backgroundColor: offWhite,
         body: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              topCard('assets/icons/default.png', 'leejunwei', 86),
+              ProfileTopCard(ownerImg: currentUser.imagePath, username: currentUser.username, n_reviews: reviewCount),
               SizedBox(height: 50),
               TabBar(
                   tabs: [
@@ -79,6 +95,20 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
               ),
 
             ]));
+  }
+
+  loadData() async{
+    FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+    FirebaseUser logInUser = await _firebaseAuth.currentUser();
+    print(logInUser.uid);
+    currentUser = await _profilePresenter.retrieveUserProfile(logInUser.uid);
+    userListing = await _profilePresenter.retrieveUserAllListing(logInUser.uid);
+    setState(() {
+      currentUser = currentUser;
+      userListing = userListing;
+    });
+    //reviewCount = await _profilePresenter.reviewCounts(logInUser.uid);
+    //userReview = await _profilePresenter.reviewList(logInUser.uid);
   }
 }
 
@@ -193,7 +223,7 @@ Widget topCard(ownerImg, username, n_reviews){
           left: 20,
           bottom: -40,
           child: CircleAvatar(
-            backgroundImage: AssetImage(ownerImg),
+            //backgroundImage: NetworkImage(ownerImg),
             radius: 60,
           ),
         ),
@@ -201,3 +231,4 @@ Widget topCard(ownerImg, username, n_reviews){
   );
 
 }
+

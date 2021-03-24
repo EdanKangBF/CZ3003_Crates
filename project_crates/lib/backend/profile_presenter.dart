@@ -21,44 +21,60 @@ class ProfilePresenter{
   final _storageRef = FirebaseStorage.instance.ref();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  Future<void> retrieveUserProfile(String uid) async {
+  Future<User> retrieveUserProfile(String uid) async {
     DataSnapshot snapshot = await _databaseRef.child("users").child(uid).once();
-    String url = await getImg("profileImages", uid);
-    User user = new User(username: snapshot.value['username'],email: snapshot.value['email'],image: File(url), isAdmin: false);
+    User user = new User(username: snapshot.value['username'],email: snapshot.value['email'],imagePath: snapshot.value['imagePath'], isAdmin: snapshot.value['isAdmin']);
     return user;
   }
-  Future<void> updateUserProfile(User user) async {
-    FirebaseUser currentUser = await _firebaseAuth.currentUser();
-    uploadImage(user.image);
-    _databaseRef.child('Users').child(currentUser.uid).update({
-      'username': user.username,
-      'email': user.email,
-      'isAdmin': false,
-
-    });
-
-    return;
-  }
-  Future<void> uploadImage(File image) async {
-    FirebaseUser currentUser = await _firebaseAuth.currentUser();
-    DataSnapshot snapshot = await _databaseRef.child("users").child(currentUser.uid).once();
-    String pastUrl = await _storageRef.child("profileImages/" + snapshot.value['image']).getDownloadURL();
-    StorageReference ref = await FirebaseStorage().getReferenceFromUrl(pastUrl);
-    ref.delete();
-
-    StorageReference firebaseStorageRef = _storageRef.child("profileImages/").child(currentUser.uid);
-    StorageUploadTask uploadTask = firebaseStorageRef.putFile(image);
-    await uploadTask.onComplete;
-
-    return;
-  }
+  // Future<void> updateUserProfile(User user) async {
+  //   FirebaseUser currentUser = await _firebaseAuth.currentUser();
+  //   uploadImage(user.image);
+  //   _databaseRef.child('Users').child(currentUser.uid).update({
+  //     'username': user.username,
+  //     'email': user.email,
+  //     'isAdmin': false,
+  //
+  //   });
+  //
+  //   return;
+  // }
+  // Future<void> uploadImage(File image, String uid) async {
+  //   DataSnapshot snapshot = await _databaseRef.child("users").child(currentUser.uid).once();
+  //   String pastUrl = await _storageRef.child("profileImages/" + snapshot.value['image']).getDownloadURL();
+  //   StorageReference ref = await FirebaseStorage().getReferenceFromUrl(pastUrl);
+  //   ref.delete();
+  //
+  //   StorageReference firebaseStorageRef = _storageRef.child("profileImages/").child(currentUser.uid);
+  //   StorageUploadTask uploadTask = firebaseStorageRef.putFile(image);
+  //   await uploadTask.onComplete;
+  //
+  //   return;
+  // }
   Future<dynamic> getImg(String imageType,String imageName) async {
     String url = await FirebaseStorage.instance.ref().child("$imageType/$imageName").getDownloadURL();
     print("url retrieve successfully $url");
     return url;
   }
+  Future<List<Listing>> retrieveUserAllListing(String uid) async {
+    List<Listing> userNormalListing = new List<Listing>();
+    String url = "";
+    await _databaseRef.child("Listing").once().then((DataSnapshot snapshot){
+      Map<dynamic, dynamic> map = snapshot.value;
+      map.forEach((key, value) {
+        if(value['userID'] == uid){
+          url = getImg("normalListings", snapshot.key).toString();
+          Listing normalListing = new Listing(listingID: snapshot.key,listingTitle: value['listingTitle'],category: value['category']
+              ,postDateTime: value['postDateTime'],description: value['description'],isRequest: value['isRequest'],
+              listingImage: File(url),longitude: value['longitude'],latitude:value['latitude'] );
+          userNormalListing.add(normalListing);
+        }
+      });
+    });
 
-  Future<void> retrieveUserListing(String uid) async {
+    return userNormalListing;
+  }
+
+  Future<List<Listing>> retrieveUserNormalListing(String uid) async {
     List<Listing> userNormalListing = new List<Listing>();
     String url = "";
     await _databaseRef.child("Listing").once().then((DataSnapshot snapshot){
@@ -112,7 +128,7 @@ class ProfilePresenter{
       Map<dynamic, dynamic> map = snapshot.value;
       map.forEach((key, value) {
         if(value['revieweeID'] == uid){
-          Review review = new Review(rating: value['rating'],description: value['description'], listingID: value['listingID'],
+          Review review = new Review(description: value['description'], listingID: value['listingID'],
           revieweeID: value['revieweeID'], reviewerID: value['reviewerID'], reviewTitle: value['reviewTitle']);
           reviewList.add(review);
         }

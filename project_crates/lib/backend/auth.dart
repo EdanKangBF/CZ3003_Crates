@@ -20,7 +20,8 @@ void createUserDetails(userDB, username, email){
     'userID':  user.uid, //Get from authentication db
     'username': username,
     'email': email,
-    'isAdmin': false, //default false,
+    'isAdmin': false,
+    'imagePath': 'https://firebasestorage.googleapis.com/v0/b/test-firebase-c99c0.appspot.com/o/Profile%2Fimage_picker5856535530717710540.jpg?alt=media&token=4f4985b1-75e2-41b4-acc6-897d6dea7d5c'//default false,
   });
 }
 

@@ -289,7 +289,7 @@ class _BodyState extends State<Body> {
                 //////////////////////////////////////////////////////////////////////////////////////
               ]),
         ),
-        bottomNavigationBar: NavigationBar(2),
+        // bottomNavigationBar: NavigationBar(2),
     );
   }
 }

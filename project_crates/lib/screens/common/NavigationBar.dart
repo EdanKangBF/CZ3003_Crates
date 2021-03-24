@@ -44,8 +44,8 @@ class _NavigationBarState extends State<NavigationBar> {
               break;
             case 3: //go to activity page
               break;
-            case 4:
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
+            case 4:Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
+              // await Navigator.pushNamed(context, PageB.ROUTE);
             break;
 
           }
@@ -76,6 +76,9 @@ class _NavigationBarState extends State<NavigationBar> {
 
       ),
     );
+  }
+  loadPage (BuildContext context, String routename)async{
+    await Navigator.pushNamed(context, routename);
   }
 }
 

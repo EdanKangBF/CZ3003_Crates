@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/backend/auth.dart';
+import 'package:flutter_application_1/backend/profile_presenter.dart';
+import 'package:flutter_application_1/models/user.dart';
+import 'package:flutter_application_1/screens/common/UserNavigationBar.dart';
 import '../authenticate/register.dart';
 import '../common/widgets.dart';
 import '../common/theme.dart';
@@ -8,6 +11,7 @@ import '../home/home.dart';
 
 
 class SignIn extends StatefulWidget {
+  static String tag = 'signin-page';
   @override
   _SignInState createState() => _SignInState();
 }
@@ -16,6 +20,8 @@ class _SignInState extends State<SignIn> {
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final _profilePresenter = new ProfilePresenter();
+  User userDetails;
 
   @override
   void dispose() {
@@ -29,22 +35,40 @@ class _SignInState extends State<SignIn> {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => Register()));
   }
-
-  void loginUserClick() {
+  void loginUserClick(){
     FirebaseUser user;
-    signInWithEmailAndPassword(emailController.text, passwordController.text).then((user) =>
-    {
-      //If successful login, navigate to home page
-      if (user != null){
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => Home()))
-      } else {
+    signInWithEmailAndPassword(emailController.text, passwordController.text).then((user){
+      if(user != null){
+        retrieveUserType(user.uid);
+
+        // if(userDetails !=null){
+        //   print(userDetails.isAdmin);
+        //   Navigator.of(context).pushNamed(UserNavigationBar.tag);
+        // }else{
+        //   //Navigator.of(context).pushNamed(AdminNavigationBar.tag);
+        // }
+      }else{
         //TODO: Show appropriate error messages (eg wrong password) on front-end
       }
     });
   }
+
+  // void loginUserClick() {
+  //   FirebaseUser user;
+  //   signInWithEmailAndPassword(emailController.text, passwordController.text).then((user) =>
+  //   {
+  //     //If successful login, navigate to home page
+  //     if (user != null){
+  //       //retrieveUserType(user.uid);
+  //       Navigator.push(
+  //           context,
+  //           MaterialPageRoute(
+  //               builder: (context) => Home()));
+  //     } else {
+  //       //TODO: Show appropriate error messages (eg wrong password) on front-end
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +116,10 @@ class _SignInState extends State<SignIn> {
                             btnText: 'Log In',
                             btnPressed: (){
                               loginUserClick();
+                              print(userDetails);
+                              if(userDetails!= null){
+                                Navigator.of(context).pushNamed(UserNavigationBar.tag);
+                              }
                             }
                         ),
                         Padding(
@@ -136,5 +164,11 @@ class _SignInState extends State<SignIn> {
                           ),),
                       ]),
                 ))));
+  }
+  retrieveUserType(String uid) async{
+    userDetails =  await _profilePresenter.retrieveUserProfile(uid);
+    setState(() {
+      userDetails = userDetails;
+    });
   }
 }
