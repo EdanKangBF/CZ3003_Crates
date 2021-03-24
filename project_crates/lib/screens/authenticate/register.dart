@@ -20,7 +20,7 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-
+  final AuthService _auth = AuthService();
   final emailController = TextEditingController();
 
   void dispose() {
@@ -64,10 +64,20 @@ class _RegisterState extends State<Register> {
                         SizedBox(height: 10),
                         CustomButton(
                             btnText: 'Next',
-                            btnPressed: (){
-                              // Navigate to second register page
-                              Navigator.push(
-                                  context, MaterialPageRoute(builder: (context) => RegisterNext(emailController.text)));
+                            btnPressed: () {
+                              // Email Validation
+                              if (emailController.text.isEmpty) {
+                                _auth.displayToastMessage(
+                                    "Email cannot be empty", context);
+                              } else if (!emailController.text.contains("@")) {
+                                _auth.displayToastMessage("Invalid Email", context);
+                              } else {
+                                // Navigate to second register page
+                                Navigator.push(
+                                    context, MaterialPageRoute(builder: (
+                                    context) =>
+                                    RegisterNext(emailController.text)));
+                              }
                             }
                         ),
                         Padding(
@@ -129,6 +139,7 @@ class _RegisterNextState extends State<RegisterNext> {
   var userEmail;
   final usernameController = TextEditingController();
   final emailController = TextEditingController();
+  final AuthService _auth = AuthService();
 
   @override
   void initState() {
@@ -188,9 +199,16 @@ class _RegisterNextState extends State<RegisterNext> {
                         CustomButton(
                             btnText: 'Next',
                             btnPressed: (){
-                              // Navigate to last registration page
-                              Navigator.push(
-                                  context, MaterialPageRoute(builder: (context) => RegisterFinal(emailController.text,usernameController.text)));
+                              // Username validation
+                              if(usernameController.text.isEmpty){
+                                _auth.displayToastMessage("Username cannot be empty", context);
+                              } else if(usernameController.text.length < 3){
+                                _auth.displayToastMessage("Name must be at least 3 characters", context);
+                              } else{
+                                // Navigate to last registration page
+                                Navigator.push(
+                                    context, MaterialPageRoute(builder: (context) => RegisterFinal(emailController.text,usernameController.text)));
+                              }
                             }
                         ),
                         SizedBox(height: 160),
@@ -228,6 +246,7 @@ class _RegisterFinalState extends State<RegisterFinal> {
 
   var email;
   var username;
+  final AuthService _auth = AuthService();
 
   final usernameController = TextEditingController();
   final emailController = TextEditingController();
@@ -303,12 +322,19 @@ class _RegisterFinalState extends State<RegisterFinal> {
                         CustomButton(
                             btnText: 'Register',
                             btnPressed: () async{
-                              FirebaseUser user = await AuthService().createUserWithEmailAndPassword(emailController.text, passwordController.text);
-                              AuthService().createUserDetails(user, usernameController.text, emailController.text);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => SignIn()));
+                              // Password Validation
+                              if(passwordController.text.isEmpty){
+                                _auth.displayToastMessage("Password cannot be empty", context);
+                              } else if(passwordController.text.length < 6){
+                                _auth.displayToastMessage("Password must contain at least 6 characters", context);
+                              } else {
+                                FirebaseUser user = await _auth.createUserWithEmailAndPassword(emailController.text, passwordController.text,context);
+                                _auth.createUserDetails(user, usernameController.text, emailController.text);
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => SignIn()));
+                              }
                             }
                         ),
                         SizedBox(height: 120),

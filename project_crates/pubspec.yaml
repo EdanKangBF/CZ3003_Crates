@@ -38,6 +38,7 @@ dependencies:
   location: ^3.0.0
   vector_math:
   provider: ^5.0.0
+  fluttertoast: ^8.0.3
 
 
 dev_dependencies:

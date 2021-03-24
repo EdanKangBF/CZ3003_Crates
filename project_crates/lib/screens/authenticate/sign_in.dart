@@ -25,6 +25,7 @@ class _SignInState extends State<SignIn> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final _profilePresenter = new ProfilePresenter();
+  final AuthService _auth = AuthService();
   User userDetails;
 
   @override
@@ -56,6 +57,14 @@ class _SignInState extends State<SignIn> {
   //     }
   //   });
   // }
+
+  void loginUserClick() async{
+    dynamic result = await AuthService().signInWithEmailAndPassword(emailController.text, passwordController.text);
+    if (result == null)
+      _auth.displayToastMessage("Invalid Email/Password", context);
+    else
+      _auth.displayToastMessage("Login Successful", context);
+  }
 
   // void loginUserClick() {
   //   FirebaseUser user;
@@ -118,11 +127,16 @@ class _SignInState extends State<SignIn> {
                         SizedBox(height: 20),
                         CustomButton(
                             btnText: 'Log In',
-                            btnPressed: () async{
-                              dynamic result = await AuthService().signInWithEmailAndPassword(emailController.text, passwordController.text);
-                              if (result == null)
-                                print('failed login!!!!');
+                            btnPressed: () {
+                              if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+                                _auth.displayToastMessage("Email/Password Field cannot be empty", context);
+                              } else if (!emailController.text.contains("@")) {
+                                _auth.displayToastMessage("Invalid Email", context);
+                              } else {
+                                loginUserClick();
+                              }
                             }
+
                         ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20,10,20,10),
