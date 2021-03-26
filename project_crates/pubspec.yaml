@@ -1,4 +1,4 @@
-name: flutter_application_1
+name: projectcrates
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -26,10 +26,16 @@ dependencies:
 
   firebase_auth: ^0.14.0+5
   google_sign_in: ^4.4.4
+  firebase_database: 
+  firebase_storage:
+  image_picker: 
+  path:
+  path_provider: 
+  uuid: 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
-  firebase_database: 3.1.6
+
 
 dev_dependencies:
   flutter_test:
