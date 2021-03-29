@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:projectcrates/Chat/readtest.dart';
 import 'package:projectcrates/auth.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -7,6 +10,7 @@ class LoginScreen extends StatefulWidget {
   final String title;
   final BaseAuth auth;
   final VoidCallback onSignedIn;
+  final dbRef = FirebaseDatabase.instance.reference();
 
   @override
   State<StatefulWidget> createState() => _LoginSignUpPageState(title);
@@ -51,7 +55,8 @@ class _LoginSignUpPageState extends State<LoginScreen> {
         if (_formMode == FormMode.LOGIN) {
           userId = await widget.auth.signIn(_email, _password);
           print('Signed in: $userId');
-          print('username: ');
+          var userID = FirebaseAuth.instance.currentUser();
+          dbRef.child('/testuser').set({userId: '$userID'});
         } else {
           userId = await widget.auth.signUp(_email, _password);
           widget.auth.sendEmailVerification();

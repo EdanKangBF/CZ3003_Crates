@@ -1,26 +1,28 @@
-//import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class ChatMessage extends StatelessWidget {
   final String text;
   final String imageUrl;
   final String username;
+  final String userId;
   final AnimationController animationController;
 
   ChatMessage({
     String text,
     String imageUrl,
     String username,
+    String userId,
     AnimationController animationController,
   })  : text = text,
         imageUrl = imageUrl,
         username = username,
+        userId = userId,
         animationController = animationController;
 
 //check if message is image or text
   Map<String, dynamic> toMap() => imageUrl == null
-      ? {'text': text, 'username': username}
-      : {'imageUrl': imageUrl, 'username': username};
+      ? {'text': text, 'username': username, 'userId': userId}
+      : {'imageUrl': imageUrl, 'username': username, 'userId': userId};
 
   @override
   Widget build(BuildContext context) {

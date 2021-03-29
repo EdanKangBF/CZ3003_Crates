@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:projectcrates/auth.dart';
 
-import 'chat.dart';
+import 'chatscreen.dart';
 import 'login_screen.dart';
 
+//Root page determines the state of the app, Whether it is authenticated or not
 class RootPage extends StatefulWidget {
   RootPage({this.title, this.auth});
 
@@ -20,6 +21,7 @@ enum AuthStatus {
   LOGGED_IN,
 }
 
+//set default status to Not determined
 class _RootPageState extends State<RootPage> {
   final String _title;
 
