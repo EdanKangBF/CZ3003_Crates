@@ -30,6 +30,7 @@ void createUserDetails(userDB, username, email){
     'username': username,
     'email': email,
     'isAdmin': false, //default false,
+    'isBanned': '0', //default false
     'imagePath': 'https://firebasestorage.googleapis.com/v0/b/test-firebase-c99c0.appspot.com/o/Profile%2Fimage_picker5856535530717710540.jpg?alt=media&token=4f4985b1-75e2-41b4-acc6-897d6dea7d5c'//default path
   });
 }
@@ -53,13 +54,13 @@ Future<bool> isAdminCheck(userID) async{
   return snapshot.value['isAdmin'];
 }
 
+Future<String> isBannedCheck(userID) async{
+  DataSnapshot snapshot =  await _firebaseRef.child(userID).once();
+  return snapshot.value['isBanned'];
+}
+
 // Get Current Login UserID
 Future<String> currentUser() async {
-  /* Example Usage:
-   currentUser().then((value) => {
-    print("LoginUserID:" + value)
-   });
-*/
   FirebaseUser user = await _auth.currentUser();
   return user.uid;
 }

@@ -43,11 +43,24 @@ class _SignInState extends State<SignIn> {
       if(user != null){
         isAdminCheck(user.uid) .then((value) => {
           if (value == false){
-            // Normal User
-            formKey.currentState.reset(),
-            displayToastMessage("Login Successful", context),
-            //Change AuthStatus
-            widget.onSignedIn()
+            isBannedCheck(user.uid) .then((value) =>
+            {
+              // Normal User
+              if(value == '0'){ // User not banned
+                formKey.currentState.reset(),
+                displayToastMessage("Login Successful", context),
+                //Change AuthStatus
+                widget.onSignedIn()
+              } else if (value == '1'){
+                // User is banned for 30 Days
+                formKey.currentState.reset(),
+                displayToastMessage("Your account is banned for 30 days", context)
+              } else {
+                // User Banned Forever
+                formKey.currentState.reset(),
+                displayToastMessage("Your account is banned", context)
+              }
+            })
           } else {
             // Admin
             formKey.currentState.reset(),
