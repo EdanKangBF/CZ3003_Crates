@@ -9,9 +9,6 @@ import 'package:flutter_application_1/backend/home_presenter.dart';
 import 'category_page.dart';
 
 class Home extends StatefulWidget {
-  //Signed Out
-  //Home({this.onSignedOut});
-  //final VoidCallback onSignedOut;
 
   @override
   _HomeState createState() => _HomeState();
@@ -25,16 +22,6 @@ class _HomeState extends State<Home> {
   List<User> userDetailList = [];
   bool dataLoadingStatus = false;
   List<Listing> reversedList;
-
-  //Sign Out: onPressed: _signOut
-/*  void _signOut() async {
-    try {
-      await signOut();
-      widget.onSignedOut();
-    }catch(e){
-      print(e);
-    }
-  }*/
 
   @override
   void initState() {
@@ -90,7 +77,7 @@ class _HomeState extends State<Home> {
                     )
                 ),
               ),
-              LatestList(userDetailList, listings),
+              listings.isEmpty == true ? Text('No listings available',textAlign: TextAlign.center) : LatestList(userDetailList, listings),
               SizedBox(height:30),
             ]):Center(child: CircularProgressIndicator())
     );
@@ -423,10 +410,6 @@ Widget LatestList(List<User> userDetailList,List<Listing> listings){
 
   List<CustomListingCard> listing_list = [];
 
-  //TODO: If no listings, show no listing text
-  if(listings.isEmpty){
-    print('empty');
-  }
   // Get First 4 Newest Listings only
   for(int i=0;i<4;i++){
     print('listingID: ${listings[i].listingID}');

@@ -82,7 +82,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 ),
               ),
               SizedBox(height:15),
-              CategoryList(userDetailList, listings),
+              listings.isEmpty == true ? Text('No listings available',textAlign: TextAlign.center) : CategoryList(userDetailList, listings),
               SizedBox(height:30),
             ]):Center(child: CircularProgressIndicator())
     );
@@ -173,11 +173,6 @@ Widget topCard(){
 Widget CategoryList(List<User> userDetailList, List<Listing> listings) {
 
   List<CustomListingCard> listing_list = [];
-
-  //TODO: If no listings, show no listing text
-  if(listings.isEmpty){
-    print('empty');
-  }
 
   for(int i=0; i< listings.length;i++){
     listing_list.add(CustomListingCard(listingID: listings[i].listingID, title: listings[i].listingTitle, owner: userDetailList[i].username, listingImg: listings[i].listingImage, ownerImg: userDetailList[i].imagePath));
