@@ -21,7 +21,6 @@ class _HomeState extends State<Home> {
   List<Listing> listings;
   List<User> userDetailList = [];
   bool dataLoadingStatus = false;
-  List<Listing> reversedList;
 
   @override
   void initState() {
@@ -34,13 +33,20 @@ class _HomeState extends State<Home> {
       dataLoadingStatus = true;
     });
     listings = await ListingData().getListings(category);
-    reversedList = listings.reversed.toList();
+    // Sort list by date
+    listings.sort((a,b) {
+      var adate = a.postDateTime;
+      var bdate = b.postDateTime;
+      return -adate.compareTo(bdate);
+    });
+
     for (int i=0;i<4;i++) {
-      userDetail = await ProfilePresenter().retrieveUserProfile(reversedList[i].userID);
+      userDetail = await ProfilePresenter().retrieveUserProfile(listings[i].userID);
       userDetailList.add(userDetail);
     }
     setState(() {
-      listings = reversedList;
+      // listings = reversedList;
+      listings = listings;
       userDetailList = userDetailList;
       dataLoadingStatus = false;
     });
@@ -410,9 +416,8 @@ Widget LatestList(List<User> userDetailList,List<Listing> listings){
 
   List<CustomListingCard> listing_list = [];
 
-  // Get First 4 Newest Listings only
+  // Get First 4 Newest Listings
   for(int i=0;i<4;i++){
-    print('listingID: ${listings[i].listingID}');
     listing_list.add(
         CustomListingCard(listingID: listings[i].listingID, title: listings[i].listingTitle, owner: userDetailList[i].username, listingImg: listings[i].listingImage, ownerImg: userDetailList[i].imagePath));
   }
