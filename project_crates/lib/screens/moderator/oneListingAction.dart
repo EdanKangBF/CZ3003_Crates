@@ -212,7 +212,7 @@ class _ListingActionFormState extends State<ListingActionForm> {
                               .addReportListingActionData(data);
                           await ModeratorPresentor().updateReportListingData(
                               widget.reportListing.reportID);
-
+                          displayToastMessage('Successfully submitted', context);
                           Navigator.of(context)
                               .popUntil((route) => route.isFirst);
                         },

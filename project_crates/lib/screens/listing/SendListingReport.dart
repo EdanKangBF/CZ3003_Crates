@@ -211,6 +211,7 @@ class _SendListingReportState extends State<SendListingReport> {
                                 userID: currUser);
                             await ModeratorPresentor()
                                 .addReportListingData(report);
+                            displayToastMessage('Successfully submitted', context);
                             Navigator.pop(context);
                           }),
                     ),
