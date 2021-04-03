@@ -43,8 +43,7 @@ class ChatMessage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(username,
-                        style: Theme.of(context).textTheme.subtitle1),
+                    Text(username, style: Theme.of(context).textTheme.subhead),
                     Container(
                       margin: const EdgeInsets.only(top: 5.0),
                       child: imageUrl == null
