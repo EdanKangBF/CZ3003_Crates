@@ -76,6 +76,7 @@ class DatabaseAccess {
   //delete listing node using its unique key
   void deleteListingOnKey(String key) async {
     DatabaseReference entryRef = databaseRef.child("Listing").child(key);
+
     //delete image from storage if it exists
     await entryRef.once().then((DataSnapshot snapshot) async {
       Map<dynamic, dynamic> data = snapshot.value;
@@ -83,13 +84,17 @@ class DatabaseAccess {
         await storageAccess.deleteListingImage(data['listingImage']);
       }
     });
+
     //after storage deletion, delete database entry
     try {
-      databaseRef.child("Listing").child(key).remove();
+      await databaseRef.child('Listing').child(key).remove();
+      print('Listing deleted from listing model');
     } catch (e) {
-      print("Deletion unsuccessful");
+      print('Listing Deletion unsuccessful');
       print(e);
     }
+
+
   }
 
   //update an entire listing node with a new listing, postDateTime updated to DateTime.now()

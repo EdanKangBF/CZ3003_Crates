@@ -38,9 +38,14 @@ class StorageAccess {
   }
 
   Future<void> deleteListingImage(String url) async {
-    if (url == null) return;
-    StorageReference storageRef = await storage.getReferenceFromUrl(url);
-    await storageRef.delete();
-    print("Storage Image deleted");
+    try{
+      if (url == null) return;
+      var storageRef = await storage.getReferenceFromUrl(url);
+      await storageRef.delete();
+      print('Storage Image deleted');
+    }catch(e){
+      print('Failed to delete image: $e');
+    }
+
   }
 }
