@@ -1,16 +1,15 @@
 import 'dart:convert';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter_application_1/models/ListingImageData.dart';
 import 'package:flutter_application_1/models/Post.dart';
 import 'package:http/http.dart' as http;
 
 class MatchPresenter{
-  String foodurl;
-  MatchPresenter({
-    this.foodurl,
-});
 
+  final _databaseRef = FirebaseDatabase.instance.reference();
   String url = "api.foodai.org";
 
-  Future<List<Post>> fetchCategories() async {
+  Future<List<Post>> fetchCategories(String foodurl) async {
     List<Post> postList = new List<Post>();
     final response = await http.post(
       Uri.https('api.foodai.org', 'v1/classify'),
@@ -42,6 +41,13 @@ class MatchPresenter{
     }
 
     return postList;
+  }
+
+  Future addListingImageData(ListingImageData data) async{
+    await _databaseRef.child("ListingImageData").push().set({
+      "listingID": data.listingID,
+      "categories": data.categories,
+    });
   }
 }
 
