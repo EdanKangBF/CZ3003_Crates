@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/backend/databaseAccess.dart';
-import 'package:flutter_application_1/backend/locationService.dart';
 import 'package:flutter_application_1/backend/storageAccess.dart';
 import 'package:flutter_application_1/models/Listing.dart';
 import 'package:flutter_application_1/screens/common/user_main.dart';
@@ -10,11 +9,11 @@ import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:image_picker/image_picker.dart';
-import '../home/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Newlisting_page extends StatelessWidget {
   String _search;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,11 +77,10 @@ class _BodyState extends State<Body> {
   final listingTitleController = TextEditingController();
   final descriptionController = TextEditingController();
 
-  LocationService loc = LocationService();
   DatabaseAccess dao = DatabaseAccess();
   StorageAccess storageAccess = StorageAccess();
 
-  MapHandler _mapHandler = new MapHandler();
+  MapHandler _mapHandler = MapHandler();
   Prediction _prediction;
   LatLng _currentLocation;
   var addressController = TextEditingController();
@@ -92,17 +90,43 @@ class _BodyState extends State<Body> {
     return Scaffold(
       body: SingleChildScrollView(
         //body: Center(
-        child: Column(children: <Widget>[
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
           SizedBox(height: 20),
-          Align(
-              alignment: Alignment(-0.7, 0),
-              child: Text(
-                  'I am...', // Text placement will change depend on the search result
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 35,
-                      fontWeight: FontWeight.bold))),
+          InkWell(
+            onTap: () async {
+              _showPicker(context);
+            },
+            child: Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20.0),
+                child: image != null
+                    ? Image.file(
+                  image,
+                  height: 200,
+                  width: 200,
+                )
+                    : Container(
+                  height: 200.0,
+                  width: 200.0,
+                  color: Colors.grey[300],
+                  child: Icon(Icons.photo_camera,
+                      color: Colors.white, size: 50.0),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal:20.0),
+            child: Text('I am...',
+                // Text placement will change depend on the search result
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold)),
+          ),
           Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -134,7 +158,7 @@ class _BodyState extends State<Body> {
                       ],
                       onPressed: (int newIndex) {
                         setState(() {
-                          for (int buttonIndex = 0;
+                          for (var buttonIndex = 0;
                           buttonIndex < isselected.length;
                           buttonIndex++) {
                             if (buttonIndex == newIndex) {
@@ -189,8 +213,8 @@ class _BodyState extends State<Body> {
           ),
           Align(
               alignment: Alignment(-0.7, 0),
-              child: Text(
-                  "it's called ...", // Text placement will change depend on the search result
+              child: Text("it's called ...",
+                  // Text placement will change depend on the search result
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       color: Colors.grey,
@@ -212,8 +236,8 @@ class _BodyState extends State<Body> {
           ),
           Align(
               alignment: Alignment(-0.5, 0),
-              child: Text(
-                  "Additional details", // Text placement will change depend on the search result
+              child: Text('Additional details',
+                  // Text placement will change depend on the search result
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       color: Colors.grey,
@@ -238,8 +262,8 @@ class _BodyState extends State<Body> {
           ),
           Align(
               alignment: Alignment(-0.8, 0),
-              child: Text(
-                  "Address", // Text placement will change depend on the search result
+              child: Text('Address',
+                  // Text placement will change depend on the search result
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       color: Colors.grey,
@@ -250,22 +274,23 @@ class _BodyState extends State<Body> {
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
               child: Container(
                 child: TextField(
-
                     style: TextStyle(fontSize: 10),
                     controller: addressController,
-                    onTap: ()async{
+                    onTap: () async {
                       _prediction = await PlacesAutocomplete.show(
                           context: context,
                           apiKey: _mapHandler.LocationAPIkey,
                           mode: Mode.overlay, // Mode.fullscreen
-                          language: "en");
-                      LatLng _selected = await _mapHandler.getLatLng(_prediction);
+                          language: 'en');
+                      if (_prediction != null) {
+                        var _selected =
+                        await _mapHandler.getLatLng(_prediction);
 
-                      setState(() {
-                        _currentLocation = _selected;
-                        addressController.text = _prediction.description;
-                      });
-
+                        setState(() {
+                          _currentLocation = _selected;
+                          addressController.text = _prediction.description;
+                        });
+                      }
                     },
                     decoration: InputDecoration(
                         contentPadding:
@@ -279,47 +304,38 @@ class _BodyState extends State<Body> {
           ),
 
           SizedBox(height: 20),
-          InkWell(
-            onTap: () async{
-              _showPicker(context);
-            },
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20.0),
-              child: image != null
-                  ? Image.file(
-                image,
-                height: 200,
-                width: 200,
-              )
-                  : Container(
-                height: 200.0,
-                width: 200.0,
-                color: Colors.grey[300],
-                child: Icon(Icons.photo_camera,
-                    color: Colors.white, size: 50.0),
-              ),
-            ),
-          ),
-
           Container(
             padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
             //alignment: Alignment(0.7,0),
             child: MaterialButton(
               elevation: 1,
-              minWidth: 100, // width of the button
+              minWidth: 100,
+              // width of the button
               height: 50,
               onPressed: () async {
                 if (listingTitleController.text == '') {
-                  print('no listing title inputted');
+                  print('No listing title inputted');
                   return; //TODO frontend user warning for empty listingTitle/itemName
                 }
-                //TODO location and address optional?
 
-                String imageString = image != null
-                    ? await storageAccess.uploadFile(image)
-                    : null;
+                if (valueChoose == null) {
+                  print('No category selected');
+                  return; //TODO frontend user warning for unselected category
+                }
 
-                Listing newListing = Listing(
+                if (image == null) {
+                  print('No image uploaded');
+                  return; //TODO frontend user warning for no uploaded image
+                }
+
+                if (_currentLocation == null) {
+                  print('No location selected');
+                  return; //TODO frontend user warning no unselected location
+                }
+
+                var imageString = await storageAccess.uploadFile(image);
+
+                var newListing = Listing(
                   userID: userid,
                   listingTitle: listingTitleController.text,
                   longitude: _currentLocation.longitude,
@@ -332,10 +348,11 @@ class _BodyState extends State<Body> {
                 );
 
                 await dao.addListing(newListing);
-                //execute upadate
+                //execute update
                 // Navigator.of(context).pushReplacement(
                 //     MaterialPageRoute(builder: (context) => Home()));
-                await Navigator.push(context, MaterialPageRoute(builder: (context) => UserMain()));
+                await Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => UserMain()));
               },
               color: Color(0xFFFFC857),
               shape: RoundedRectangleBorder(
@@ -353,9 +370,10 @@ class _BodyState extends State<Body> {
   }
 
   Future<String> getUID() async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    var user = await FirebaseAuth.instance.currentUser();
     return user.uid;
   }
+
   void _showPicker(context) {
     showModalBottomSheet(
         context: context,
@@ -383,13 +401,12 @@ class _BodyState extends State<Body> {
               ),
             ),
           );
-        }
-    );
+        });
   }
-  _camera() async {
+
+  void _camera() async {
     var _image = await ImagePicker.pickImage(
-        source: ImageSource.camera, imageQuality: 50
-    );
+        source: ImageSource.camera, imageQuality: 50);
     if (_image == null) {
       print('No image taken.');
       return;
@@ -399,10 +416,9 @@ class _BodyState extends State<Body> {
     });
   }
 
-  _gallery() async {
-    var _image = await  ImagePicker.pickImage(
-        source: ImageSource.gallery, imageQuality: 50
-    );
+  void _gallery() async {
+    var _image = await ImagePicker.pickImage(
+        source: ImageSource.gallery, imageQuality: 50);
     if (_image == null) {
       print('No image selected.');
       return;
@@ -411,4 +427,64 @@ class _BodyState extends State<Body> {
       image = _image;
     });
   }
+}
+
+// builds the pop dialog
+// TODO: need to pass in data of the matched listings
+Widget matchesDialog(context) {
+  return AlertDialog(
+      title: Text('Hold on! We found some matches!'),
+      content: Container(
+        height: 300.0, // Change as per your requirement
+        width: 300.0, // Change as per your requirement
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: 5,
+          itemBuilder: (BuildContext context, int index) {
+            return matchCard(
+                'Match!',
+                'This is a test description of the food!!',
+                'assets/noodles.jpg', () {
+              print('tapped');
+            });
+          },
+        ),
+      ),
+      actions: [
+        TextButton(child: Text('Post Anyway'), onPressed: () {}),
+        TextButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            }),
+      ]);
+}
+
+// builds each matched row
+Widget matchCard(String title, String description, String listingImg, onTap) {
+  return InkWell(
+    onTap: onTap,
+    child: Card(
+        margin: EdgeInsets.fromLTRB(5, 2, 2, 5),
+        child: ListTile(
+          leading: CircleAvatar(
+            radius: 30,
+            backgroundImage: AssetImage(
+                listingImg), // no matter how big it is, it won't overflow
+          ),
+          contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+          title: Text(
+            title,
+            overflow: TextOverflow.fade,
+            maxLines: 1,
+          ),
+          subtitle: Text(
+            description,
+            overflow: TextOverflow.fade,
+            maxLines: 2,
+          ),
+          isThreeLine: false,
+          trailing: Icon(Icons.keyboard_arrow_right),
+        )),
+  );
 }
