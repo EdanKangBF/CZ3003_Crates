@@ -6,7 +6,6 @@ import '../models/Listing.dart';
 
 class ModeratorPresentor{
 
-
   final String reportListingID;
   final String reportListingActionID;
   final String moderatorID;
