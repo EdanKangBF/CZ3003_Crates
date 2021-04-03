@@ -4,7 +4,7 @@ import 'theme.dart';
 import '../listing/Newlisting_page.dart';
 import '../home/home.dart';
 import '../nearby/nearby.dart';
-import '../profile/profile.dart';
+//import '../profile/profile.dart';
 
 class NavigationBar extends StatefulWidget {
   final int tab;
@@ -15,15 +15,17 @@ class NavigationBar extends StatefulWidget {
 }
 
 class _NavigationBarState extends State<NavigationBar> {
-
   @override
-  Widget build(BuildContext context,) {
-   int  _currentIndex;
-   _currentIndex=widget.tab; // this tab tell which page the current screen is
+  Widget build(
+    BuildContext context,
+  ) {
+    int _currentIndex;
+    _currentIndex =
+        widget.tab; // this tab tell which page the current screen is
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     return Container(
-      child:BottomNavigationBar(
+      child: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
         backgroundColor: primaryColor,
@@ -33,24 +35,27 @@ class _NavigationBarState extends State<NavigationBar> {
         unselectedLabelStyle: textTheme.caption,
         onTap: (value) {
           // Respond to item press.
-          _currentIndex=value;
-          switch(value){
+          _currentIndex = value;
+          switch (value) {
             case 0:
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Home()));
               break;
-            case 1: Navigator.push(context, MaterialPageRoute(builder: (context) => Nearby()));
+            case 1:
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Nearby()));
               break;
-            case 2: Navigator.push(context, MaterialPageRoute(builder: (context) => Newlisting_page()));
+            case 2:
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Newlisting_page()));
               break;
             case 3: //go to activity page
               break;
-            case 4:
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
-            break;
-
+              // case 4:
+              //   Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
+              break;
           }
         },
-
         items: [
           BottomNavigationBarItem(
             title: Text('Home'),
@@ -73,9 +78,7 @@ class _NavigationBarState extends State<NavigationBar> {
             icon: Icon(Icons.account_circle),
           ),
         ],
-
       ),
     );
   }
 }
-

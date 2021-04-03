@@ -37,6 +37,7 @@ dependencies:
   geolocator: ^5.3.1
   location: ^3.0.0
   vector_math:
+  uuid:
 
 
 dev_dependencies:
