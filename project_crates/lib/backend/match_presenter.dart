@@ -10,7 +10,7 @@ class MatchPresenter{
 
   String url = "api.foodai.org";
 
-  Future<List<Post>> fetchMatch() async {
+  Future<List<Post>> fetchCategories() async {
     List<Post> postList = new List<Post>();
     final response = await http.post(
       Uri.https('api.foodai.org', 'v1/classify'),
@@ -23,7 +23,7 @@ class MatchPresenter{
         "api_key": 'c8d4e2ec8f5190f923de53e5d47972a698ce7054',
       }),
     );
-    
+
     if(response.statusCode == 200){
       //print(response.body);
       var responseJson = json.decode(response.body);
