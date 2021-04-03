@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter_application_1/models/Listing.dart';
 import 'package:flutter_application_1/models/ListingImageData.dart';
 import 'package:flutter_application_1/models/Post.dart';
 import 'package:http/http.dart' as http;
@@ -49,6 +50,71 @@ class MatchPresenter{
       "categories": data.categories,
     });
   }
+
+
+  Future<List<String>> getMatchedListingIDs(List<String> categories) async{
+    // list of listings IDs that has common classifications
+    var matchedListingIDs = [];
+
+    // retrieve a list of listing IDs that has common classifications
+    try{
+      await _databaseRef.child('ListingImageData').once().then((DataSnapshot snapshot) {
+        Map<dynamic, dynamic> map = snapshot.value;
+        map.forEach((key, value) {
+          // at least one common classification category
+          if (categories.any((item) => value['categories'].contains(item))) {
+            matchedListingIDs.add(value['listingID']);
+          }
+        });
+      });
+      print('Listing IDs that matched classification category "$categories": $matchedListingIDs');
+    }catch(e){
+      print('getMatchedListings(): Error occurred retrieving ListingImageData model');
+    };
+
+    return matchedListingIDs;
+  }
+
+
+  // query the db for listings that match
+  Future<List<Listing>> getMatchedListings(List<String> matchedListingIDs) async {
+    // list of listings to store the result
+    var matchedListings = [];
+    // retrieves all listings, and do matching
+    try{
+      await _databaseRef.child('Listing').orderByChild('postDateTime').once().then((DataSnapshot snapshot) {
+        Map<dynamic, dynamic> map = snapshot.value;
+        map.forEach((key, value) {
+
+          // if listing is not complete, and it's ID is in the matchedListingIDs list
+          if (value['isComplete'] == false && matchedListings.contains(key)){
+
+            // construct Listing object
+            var match = Listing(
+                listingID: key,
+                userID : value['userID'],
+                listingTitle: value['listingTitle'],
+                category: value['category'],
+                postDateTime: DateTime.parse(value['postDateTime']),
+                description: value['description'],
+                isRequest: value['isRequest'],
+                isComplete: value['isComplete'],
+                listingImage: value['listingImage'],
+                longitude: value['longitude'],
+                latitude: value['latitude']);
+
+            // append to results list
+            matchedListings.add(match);
+          }
+          });
+        });
+    }catch(e){
+      print('getMatchedListings(): Error occurred retrieving matches');
+    };
+    print('Matched: ${matchedListings.length} listings');
+    return matchedListings;
+  }
+
 }
 
 
