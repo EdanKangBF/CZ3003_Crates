@@ -1,8 +1,6 @@
-import 'dart:io';
-
 class ListingImageData {
   final String listingID;
-  final List<String> categories;
+  final Map<String, double> categories;
 
   ListingImageData(
       {

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_application_1/models/Listing.dart';
 import 'package:flutter_application_1/models/ListingImageData.dart';
-import 'package:flutter_application_1/models/Post.dart';
 import 'package:http/http.dart' as http;
 
 class MatchPresenter{
@@ -10,8 +9,8 @@ class MatchPresenter{
   final _databaseRef = FirebaseDatabase.instance.reference();
   String url = "api.foodai.org";
 
-  Future<List<Post>> fetchCategories(String foodurl) async {
-    List<Post> postList = new List<Post>();
+  Future<Map<String, double>> fetchCategories(String foodurl) async {
+    Map map = Map<String, double>();
     final response = await http.post(
       Uri.https('api.foodai.org', 'v1/classify'),
       headers: <String, String>{
@@ -31,17 +30,14 @@ class MatchPresenter{
       var length = responseJson['food_results_by_category'].length;
 
       for(int i = 0; i < length; i++){
-        Post post = new Post(food_category: categories[i][0], percentage: double.parse(categories[i][1]));
-        print(post.food_category);
-        print(post.percentage);
-        postList.add(post);
+        map[categories[i][0]] = double.parse(categories[i][1]);
       }
     }
     //If no response == 200, means no match
     else{
     }
 
-    return postList;
+    return map;
   }
 
   Future addListingImageData(ListingImageData data) async{
