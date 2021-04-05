@@ -24,7 +24,7 @@ class ProfilePresenter {
   Future<void> retrieveUserProfile(String uid) async {
     DataSnapshot snapshot = await _databaseRef.child("users").child(uid).once();
     String url = await getImg("profileImages", uid);
-    Users user = new Users(
+    User user = new User(
         username: snapshot.value['username'],
         email: snapshot.value['email'],
         image: File(url),
@@ -33,7 +33,7 @@ class ProfilePresenter {
   }
 
   Future<void> updateUserProfile(User user) async {
-    User currentUser = await _firebaseAuth.currentUser();
+    FirebaseUser currentUser = await _firebaseAuth.currentUser();
     uploadImage(user.image);
     _databaseRef.child('Users').child(currentUser.uid).update({
       'username': user.username,

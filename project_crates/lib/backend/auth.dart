@@ -6,8 +6,8 @@ import '../models/user.dart';
 final FirebaseAuth _auth = FirebaseAuth.instance;
 var _firebaseRef = FirebaseDatabase().reference().child('users');
 
-Future<User> createUserWithEmailAndPassword(email, password) async {
-  final User user = (await _auth.createUserWithEmailAndPassword(
+Future<FirebaseUser> createUserWithEmailAndPassword(email, password) async {
+  final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
     email: email,
     password: password,
   ))
@@ -16,7 +16,7 @@ Future<User> createUserWithEmailAndPassword(email, password) async {
 }
 
 void createUserDetails(userDB, username, email) {
-  User user = userDB;
+  FirebaseUser user = userDB;
   _firebaseRef.child(user.uid).set({
     'userID': user.uid, //Get from authentication db
     'username': username,
@@ -25,8 +25,8 @@ void createUserDetails(userDB, username, email) {
   });
 }
 
-Future<User> signInWithEmailAndPassword(email, password) async {
-  final User user = (await _auth.signInWithEmailAndPassword(
+Future<FirebaseUser> signInWithEmailAndPassword(email, password) async {
+  final FirebaseUser user = (await _auth.signInWithEmailAndPassword(
     email: email,
     password: password,
   ))
@@ -34,10 +34,10 @@ Future<User> signInWithEmailAndPassword(email, password) async {
   return user;
 }
 
-Future<Users> isAdminCheck(userDB) async {
-  User user = userDB;
+Future<User> isAdminCheck(userDB) async {
+  FirebaseUser user = userDB;
   DataSnapshot snapshot = await _firebaseRef.child(user.uid).once();
-  Users _user = new Users(
+  User _user = new User(
       userID: user.uid,
       username: snapshot.value['username'],
       email: snapshot.value['email'],

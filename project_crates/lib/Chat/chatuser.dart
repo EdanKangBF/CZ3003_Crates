@@ -5,21 +5,27 @@ import 'package:flutter_application_1/Chat/chatscreenv2.dart';
 //import 'package:flutter_application_1/Chat/chatscreen.dart';
 
 class ChatUserScreen extends StatefulWidget {
-  ChatUserScreen({Key key, this.currentUserId}) : super(key: key);
-
   final currentUserId;
 
+  ChatUserScreen({Key key, this.currentUserId}) : super(key: key);
+
   @override
-  _ChatUserScreenState createState() => _ChatUserScreenState(currentUserId);
+  _ChatUserScreenState createState() => _ChatUserScreenState();
 }
 
 class _ChatUserScreenState extends State<ChatUserScreen> {
-  final _currentUserId;
+  // final DatabaseReference _databaseReference = FirebaseDatabase.instance
+  //     .reference()
+  //     .child('/users')
+  //     .orderByChild('username')
+  //     .limitToFirst(2);
 
-  _ChatUserScreenState(currentUserId) : _currentUserId = currentUserId;
+  _ChatUserScreenState({Key key, this.currentUserId});
 
-  final ScrollController listScrollController = ScrollController();
+  final ScrollController listScrollCOntroller = ScrollController();
+  final String currentUserId;
   Query _ref;
+
   @override
   void initState() {
     super.initState();
@@ -76,15 +82,19 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    print('chatuser: ' + chatUser['userID']);
-                    print(_currentUserId);
+                    print(chatUser['userID']);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => ChatScreen(
+<<<<<<< HEAD
                                   peerId: _currentUserId,
                                   peerAvatar: "test",
                                   // chatUserId: chatUser['userID'].toString(),
+=======
+                                  currentUserId: currentUserId,
+                                  //chatUserId: chatUser['userID'],
+>>>>>>> parent of 291a428 (Issue with Chat Username)
                                 )));
                   },
                   child: Row(
@@ -99,6 +109,14 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
           ],
         ));
   }
+
+  // Widget buildItem(BuildContext context, DataSnapshot snapshot) {
+  //   if (snapshot.value['id'] == currentUserId) {
+  //     return Container();
+  //   } else {
+  //     return Container();
+  //   }
+  // }
 
   Widget build(BuildContext context) {
     return Scaffold(

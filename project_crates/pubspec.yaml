@@ -24,10 +24,10 @@ dependencies:
   flutter:
     sdk: flutter
   google_maps_flutter:
-  firebase_auth: 
+  firebase_auth: ^0.14.0+5
   google_sign_in: ^4.4.4
   firebase_database:
-  firebase_storage: ^4.0.0
+  firebase_storage:
   image_picker:
   path:
   path_provider:
@@ -38,15 +38,7 @@ dependencies:
   location: ^3.0.0
   vector_math:
   uuid:
-  firebase_core: 
-  cloud_firestore: ^0.14.0+2
-  cached_network_image:
-  fluttertoast:
-  shared_preferences:
-  photo_view:
-  intl:
-  firebase_messaging:
-  flutter_local_notifications:
+
   
 
 

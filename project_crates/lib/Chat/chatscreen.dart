@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
-//const String _name = "maybe";
+const String _name = "Wei Ang";
 const String _title = 'chat screen';
 
 class ChatMessage extends StatelessWidget {
@@ -113,77 +113,33 @@ class ChatMessage extends StatelessWidget {
 }
 
 class ChatScreen extends StatefulWidget {
-  ChatScreen({Key key, this.currentUserId, this.chatUserId}) : super(key: key);
+  ChatScreen({Key key, this.currentUserId}) : super(key: key);
 
   final String currentUserId;
-  final String chatUserId;
 
   @override
-  State createState() => _ChatScreenState(_title, chatUserId, currentUserId);
+  State createState() => ChatScreenState(_title);
 }
 
-class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
-  final String _chatUserId;
-  final String _currentUserId;
-  //final String _username;
+class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   final _title;
   final List<ChatMessage> _messages;
   final TextEditingController _textController;
   final DatabaseReference _messageDatabaseReference;
   final StorageReference _photoStorageReference;
-  String _combinedId;
-  final DatabaseReference _userDatabaseReference;
-  bool _isComposing = false;
-  String username = '';
-  List lists = [];
 
-  _ChatScreenState(String title, String chatUserId, String currentUserId)
+  bool _isComposing = false;
+
+  ChatScreenState(String title)
       : _title = title,
-        _combinedId = chatUserId + currentUserId,
-        _chatUserId = chatUserId,
-        _currentUserId = currentUserId,
         _isComposing = false,
         _messages = <ChatMessage>[],
         _textController = TextEditingController(),
-        _userDatabaseReference =
-            FirebaseDatabase.instance.reference().child("users"),
         _messageDatabaseReference =
             FirebaseDatabase.instance.reference().child("messages"),
         _photoStorageReference =
             FirebaseStorage.instance.ref().child("chat_photos") {
-    _messageDatabaseReference
-        .child(_combinedId)
-        .onChildAdded
-        .listen(_onMessageAdded);
-  }
-  @override
-  void initState() {
-    super.initState();
-    getUsername();
-  }
-
-  Future<void> getUsername() async {
-    await _userDatabaseReference
-        .orderByKey()
-        .equalTo(_currentUserId)
-        .once()
-        .then((DataSnapshot snapshot) {
-      // Map result = snapshot.value;
-      // return result;
-      // setState(() {
-      //   result = snapshot.value;
-      // });
-      Map<dynamic, dynamic> values = snapshot.value;
-      print(values.toString());
-      values.forEach((key, values) {
-        print("key : " + key);
-        lists.add(values["username"]);
-        print(lists[0]);
-        setState(() {
-          username = values["username"].toString();
-        });
-      });
-    });
+    _messageDatabaseReference.onChildAdded.listen(_onMessageAdded);
   }
 
   Widget _buildTextComposer() {
@@ -243,9 +199,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     final imageUrl = event.snapshot.value["imageUrl"];
 
     ChatMessage message = imageUrl == null
-        ? _createMessageFromText(text, _chatUserId, _currentUserId, username)
-        : _createMessageFromImage(
-            imageUrl, _chatUserId, _currentUserId, username);
+        ? _createMessageFromText(text)
+        : _createMessageFromImage(imageUrl);
 
     setState(() {
       _messages.insert(0, message);
@@ -259,11 +214,9 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     setState(() {
       _isComposing = false;
     });
-    print("Username: " + username);
 
-    final ChatMessage message =
-        _createMessageFromText(text, _chatUserId, _currentUserId, username);
-    _messageDatabaseReference.child(_combinedId).push().set(message.toMap());
+    final ChatMessage message = _createMessageFromText(text);
+    _messageDatabaseReference.push().set(message.toMap());
   }
 
   void _sendImage(ImageSource imageSource) async {
@@ -273,11 +226,9 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     final StorageUploadTask uploadTask = photoRef.putFile(image);
     final StorageTaskSnapshot downloadUrl = await uploadTask.onComplete;
     final ChatMessage message = _createMessageFromImage(
-        await downloadUrl.ref.getDownloadURL(),
-        _chatUserId,
-        _currentUserId,
-        username);
-    _messageDatabaseReference.child(_combinedId).push().set(message.toMap());
+      await downloadUrl.ref.getDownloadURL(),
+    );
+    _messageDatabaseReference.push().set(message.toMap());
   }
 
   void _sendImageFromCamera() async {
@@ -288,26 +239,18 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     _sendImage(ImageSource.gallery);
   }
 
-  ChatMessage _createMessageFromText(String text, String chatUserId,
-          String currentUserId, String username) =>
-      ChatMessage(
+  ChatMessage _createMessageFromText(String text) => ChatMessage(
         text: text,
-        username: username,
-        chatUserId: chatUserId,
-        currentUserId: currentUserId,
+        username: _name,
         animationController: AnimationController(
           duration: Duration(milliseconds: 180),
           vsync: this,
         ),
       );
 
-  ChatMessage _createMessageFromImage(String imageUrl, String chatUserId,
-          String currentUserId, String username) =>
-      ChatMessage(
+  ChatMessage _createMessageFromImage(String imageUrl) => ChatMessage(
         imageUrl: imageUrl,
-        chatUserId: chatUserId,
-        currentUserId: currentUserId,
-        username: username,
+        username: _name,
         animationController: AnimationController(
           duration: Duration(milliseconds: 90),
           vsync: this,

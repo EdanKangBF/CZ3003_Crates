@@ -1,15 +1,15 @@
 import 'dart:io';
 
-class Users {
+class User {
   final String userID;
   final String username;
   final String email;
   final bool isAdmin;
   final File image;
 
-  Users({this.userID, this.username, this.email, this.isAdmin, this.image});
+  User({this.userID, this.username, this.email, this.isAdmin, this.image});
 //User({this.username,this.email,this.isAdmin,this.image});
-  Users.fromData(Map<String, dynamic> data)
+  User.fromData(Map<String, dynamic> data)
       : userID = data['userID'],
         username = data['username '],
         email = data['email'],

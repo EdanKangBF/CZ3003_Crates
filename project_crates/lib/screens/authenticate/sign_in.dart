@@ -1,12 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Chat/chatuser.dart';
 import 'package:flutter_application_1/backend/auth.dart';
 import '../authenticate/register.dart';
 import '../common/widgets.dart';
 import '../common/theme.dart';
 import '../home/home.dart';
-//import 'package:flutter_application_1/Chat/readtest.dart';
+import 'package:flutter_application_1/Chat/chatuser.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -31,19 +30,19 @@ class _SignInState extends State<SignIn> {
   }
 
   void loginUserClick() {
-    User users;
+    FirebaseUser user;
     signInWithEmailAndPassword(emailController.text, passwordController.text)
-        .then((users) => {
+        .then((user) => {
               //If successful login, navigate to home page
-              if (users != null)
+              if (user != null)
                 {
                   //TODO DELETE DEBUGGING
-                  print(users.uid),
+                  print(user.uid),
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ChatUserScreen(
-                                currentUserId: users.uid,
+                                currentUserId: user.uid,
                               )))
                 }
               else

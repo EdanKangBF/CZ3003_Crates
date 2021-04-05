@@ -1,12 +1,9 @@
 //import packages, modules, tools
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Chat/chatuser.dart';
 import 'package:flutter_application_1/screens/authenticate/authenticate.dart';
 import 'screens/wrapper.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
-
-import 'package:flutter_application_1/Chat/chatscreenv2.dart';
 
 void main() {
   runApp(MyApp());
