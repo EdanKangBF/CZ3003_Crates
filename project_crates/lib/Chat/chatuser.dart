@@ -5,27 +5,21 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_application_1/Chat/chatscreen.dart';
 
 class ChatUserScreen extends StatefulWidget {
-  final currentUserId;
-
   ChatUserScreen({Key key, this.currentUserId}) : super(key: key);
 
+  final currentUserId;
+
   @override
-  _ChatUserScreenState createState() => _ChatUserScreenState();
+  _ChatUserScreenState createState() => _ChatUserScreenState(currentUserId);
 }
 
 class _ChatUserScreenState extends State<ChatUserScreen> {
-  // final DatabaseReference _databaseReference = FirebaseDatabase.instance
-  //     .reference()
-  //     .child('/users')
-  //     .orderByChild('username')
-  //     .limitToFirst(2);
+  final _currentUserId;
 
-  _ChatUserScreenState({Key key, this.currentUserId});
+  _ChatUserScreenState(currentUserId) : _currentUserId = currentUserId;
 
-  final ScrollController listScrollCOntroller = ScrollController();
-  final String currentUserId;
+  final ScrollController listScrollController = ScrollController();
   Query _ref;
-
   @override
   void initState() {
     super.initState();
@@ -82,13 +76,14 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    print(chatUser['userID']);
+                    print('chatuser: ' + chatUser['userID']);
+                    print(_currentUserId);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => ChatScreen(
-                                  currentUserId: currentUserId,
-                                  //chatUserId: chatUser['userID'],
+                                  currentUserId: _currentUserId,
+                                  chatUserId: chatUser['userID'].toString(),
                                 )));
                   },
                   child: Row(
@@ -103,14 +98,6 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
           ],
         ));
   }
-
-  // Widget buildItem(BuildContext context, DataSnapshot snapshot) {
-  //   if (snapshot.value['id'] == currentUserId) {
-  //     return Container();
-  //   } else {
-  //     return Container();
-  //   }
-  // }
 
   Widget build(BuildContext context) {
     return Scaffold(

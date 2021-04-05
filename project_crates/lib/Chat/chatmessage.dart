@@ -4,25 +4,38 @@ class ChatMessage extends StatelessWidget {
   final String text;
   final String imageUrl;
   final String username;
-  final String userId;
+  final String chatUserId;
+  final String currentUserId;
   final AnimationController animationController;
 
   ChatMessage({
     String text,
     String imageUrl,
     String username,
-    String userId,
+    String chatUserId,
+    String currentUserId,
     AnimationController animationController,
   })  : text = text,
         imageUrl = imageUrl,
         username = username,
-        userId = userId,
+        chatUserId = chatUserId,
+        currentUserId = currentUserId,
         animationController = animationController;
 
 //check if message is image or text
   Map<String, dynamic> toMap() => imageUrl == null
-      ? {'text': text, 'username': username, 'userId': userId}
-      : {'imageUrl': imageUrl, 'username': username, 'userId': userId};
+      ? {
+          'text': text,
+          'username': username,
+          'chatUserId': chatUserId,
+          'currentUserId': currentUserId
+        }
+      : {
+          'imageUrl': imageUrl,
+          'username': username,
+          'chatUserId': chatUserId,
+          'currentUserId': currentUserId
+        };
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +56,8 @@ class ChatMessage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(username, style: Theme.of(context).textTheme.subhead),
+                    Text(username,
+                        style: Theme.of(context).textTheme.subtitle1),
                     Container(
                       margin: const EdgeInsets.only(top: 5.0),
                       child: imageUrl == null
