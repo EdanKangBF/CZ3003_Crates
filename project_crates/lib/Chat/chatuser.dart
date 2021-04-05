@@ -1,8 +1,8 @@
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-//import 'package:flutter_application_1/Chat/chatscreenv2.dart';
-import 'package:flutter_application_1/Chat/chatscreen.dart';
+import 'package:flutter_application_1/Chat/chatscreenv2.dart';
+//import 'package:flutter_application_1/Chat/chatscreen.dart';
 
 class ChatUserScreen extends StatefulWidget {
   ChatUserScreen({Key key, this.currentUserId}) : super(key: key);
@@ -82,8 +82,9 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => ChatScreen(
-                                  currentUserId: _currentUserId,
-                                  chatUserId: chatUser['userID'].toString(),
+                                  peerId: _currentUserId,
+                                  peerAvatar: "test",
+                                  // chatUserId: chatUser['userID'].toString(),
                                 )));
                   },
                   child: Row(

@@ -6,7 +6,7 @@ import '../authenticate/register.dart';
 import '../common/widgets.dart';
 import '../common/theme.dart';
 import '../home/home.dart';
-import 'package:flutter_application_1/Chat/readtest.dart';
+//import 'package:flutter_application_1/Chat/readtest.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -31,19 +31,19 @@ class _SignInState extends State<SignIn> {
   }
 
   void loginUserClick() {
-    FirebaseUser user;
+    User users;
     signInWithEmailAndPassword(emailController.text, passwordController.text)
-        .then((user) => {
+        .then((users) => {
               //If successful login, navigate to home page
-              if (user != null)
+              if (users != null)
                 {
                   //TODO DELETE DEBUGGING
-                  print(user.uid),
+                  print(users.uid),
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ChatUserScreen(
-                                currentUserId: user.uid,
+                                currentUserId: users.uid,
                               )))
                 }
               else
