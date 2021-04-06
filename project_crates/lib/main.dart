@@ -1,6 +1,7 @@
 //import packages, modules, tools
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screens/authenticate/root.dart';
+import 'package:flutter_application_1/chats/chatuser.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.amber,
         platform: TargetPlatform.android,
       ),
-      home: RootPage(),
+      home: ChatUserScreen(),
     );
   }
 }
