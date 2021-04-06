@@ -18,6 +18,7 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
   @override
   void initState() {
     super.initState();
+    //TODO: retrieve Conversations based on current userid
     _ref = FirebaseDatabase.instance
         .reference()
         .child('/users')
@@ -105,13 +106,6 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
         ));
   }
 
-  // Widget buildItem(BuildContext context, DataSnapshot snapshot) {
-  //   if (snapshot.value['id'] == currentUserId) {
-  //     return Container();
-  //   } else {
-  //     return Container();
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -129,22 +123,7 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
                 return _buildChatItem(chatUser: chatUser);
               })),
 
-      // Container(
-      //     child: StreamBuilder(
-      //         stream: _ref.onValue,
-      //         builder: (context, snapshot) {
-      //           if (!snapshot.hasData) {
-      //             return Center(
-      //               child: CircularProgressIndicator(
-      //                 valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-      //               ),
-      //             );
-      //           } else {
-      //             return ListView.builder(
-      //                 itemBuilder: (context, index) =>
-      //                     (buildItem(context, snapshot.data)));
-      //           }
-      //         }))
+
     );
   }
 }
