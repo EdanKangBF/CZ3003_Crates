@@ -9,7 +9,6 @@ import 'package:flutter_application_1/chats/chatmessage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
-const String _name = "Wei Ang";
 const String _title = 'chat screen';
 
 class ChatScreen extends StatefulWidget {
@@ -18,8 +17,7 @@ class ChatScreen extends StatefulWidget {
   final String currentUserId;
   final String chatUserId;
   @override
-  State createState() =>
-      ChatScreenState(_title, this.currentUserId, this.chatUserId);
+  State createState() => ChatScreenState(_title, currentUserId, chatUserId);
 }
 
 class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
@@ -59,7 +57,7 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     _chatRoomId = _currentUserId + _chatUserId;
   }
 
-  Future<void> getUsername() async {
+  void getUsername() async {
     await _userDatabaseReference
         .orderByKey()
         .equalTo(_currentUserId)
@@ -175,7 +173,9 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   ChatMessage _createMessageFromText(String text) => ChatMessage(
         text: text,
-        username: _name,
+        username: username,
+        currentUserId: _currentUserId,
+        chatUserId: _chatUserId,
         animationController: AnimationController(
           duration: Duration(milliseconds: 180),
           vsync: this,
@@ -184,7 +184,9 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   ChatMessage _createMessageFromImage(String imageUrl) => ChatMessage(
         imageUrl: imageUrl,
-        username: _name,
+        username: username,
+        currentUserId: _currentUserId,
+        chatUserId: _chatUserId,
         animationController: AnimationController(
           duration: Duration(milliseconds: 90),
           vsync: this,
