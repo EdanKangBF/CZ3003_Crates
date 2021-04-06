@@ -56,6 +56,7 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     getUsername();
+    _chatRoomId = _currentUserId + _chatUserId;
   }
 
   Future<void> getUsername() async {
@@ -149,7 +150,7 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     });
 
     final ChatMessage message = _createMessageFromText(text);
-    _messageDatabaseReference.push().set(message.toMap());
+    _messageDatabaseReference.child(_chatRoomId).push().set(message.toMap());
   }
 
   void _sendImage(ImageSource imageSource) async {
@@ -161,7 +162,7 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     final ChatMessage message = _createMessageFromImage(
       await downloadUrl.ref.getDownloadURL(),
     );
-    _messageDatabaseReference.push().set(message.toMap());
+    _messageDatabaseReference.child(_chatRoomId).push().set(message.toMap());
   }
 
   void _sendImageFromCamera() async {

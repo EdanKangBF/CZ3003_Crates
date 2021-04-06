@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.amber,
         platform: TargetPlatform.android,
       ),
-      home: ChatUserScreen(),
+      home: RootPage(),
     );
   }
 }

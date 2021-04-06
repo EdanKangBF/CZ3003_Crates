@@ -3,27 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 //import 'package:flutter_application_1/Chat/chatscreenv2.dart';
 import 'package:flutter_application_1/chats/chatscreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ChatUserScreen extends StatefulWidget {
-  final currentUserId;
-
-  ChatUserScreen({Key key, this.currentUserId}) : super(key: key);
-
   @override
   _ChatUserScreenState createState() => _ChatUserScreenState();
 }
 
 class _ChatUserScreenState extends State<ChatUserScreen> {
-  // final DatabaseReference _databaseReference = FirebaseDatabase.instance
-  //     .reference()
-  //     .child('/users')
-  //     .orderByChild('username')
-  //     .limitToFirst(2);
-
-  _ChatUserScreenState({Key key, this.currentUserId});
-
   final ScrollController listScrollCOntroller = ScrollController();
-  final String currentUserId;
+  String currentUserId;
   Query _ref;
 
   @override
@@ -33,6 +22,17 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
         .reference()
         .child('/users')
         .orderByChild('username');
+
+    getUID().then((uid) {
+      setState(() {
+        currentUserId = uid;
+      });
+    });
+  }
+
+  Future<String> getUID() async {
+    var user = await FirebaseAuth.instance.currentUser();
+    return user.uid;
   }
 
   Widget _buildChatItem({Map chatUser}) {
@@ -82,7 +82,8 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    print(chatUser['userID']);
+                    print('currentUserId: ' + currentUserId);
+                    print('chatUserId: ' + chatUser['userID']);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -112,6 +113,7 @@ class _ChatUserScreenState extends State<ChatUserScreen> {
   //   }
   // }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
